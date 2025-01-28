@@ -2,10 +2,8 @@ import java.awt.*;
 
 public abstract class Car implements Movable {
 
-    public double x;
-    public double y;
-    public int direction;
-
+    private double x, y; // koordinater för bilen
+    private double dx, dy; // riktningskoordinater (cosinus, sinus)
 
 
     private final int nrDoors; // Number of doors on the car
@@ -21,6 +19,8 @@ public abstract class Car implements Movable {
         this.modelName = modelName;
         this.x = 0;
         this.y = 0;
+        this.dx = 1;
+        this.dy = 0;
         stopEngine();
     }
 
@@ -72,21 +72,22 @@ public abstract class Car implements Movable {
 
     @Override
     public void move() {
-
-
-
+        x += dx * currentSpeed;
+        y += dy * currentSpeed;
     }
 
     @Override
     public void turnLeft() {
-        this.x -= currentSpeed;
-
+        double temp = dx;
+        dx = -dy;
+        dy = temp;
     }
 
     @Override
     public void turnRight() {
-        this.x += currentSpeed;
-
+        double temp = dx;
+        dx = dy;
+        dy = -temp;
     }
 
     // TODO fix this method according to lab pm

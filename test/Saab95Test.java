@@ -8,11 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Saab95Test {
 
-    Saab95 saabTest = new Saab95();
-    Volvo240 volvoTest = new Volvo240();
+    Saab95 saabTest;
+    Volvo240 volvoTest;
+
 
     @BeforeEach
     void Setup() {
+        saabTest = new Saab95();
+        volvoTest = new Volvo240();
 
     }
 
@@ -52,5 +55,11 @@ class Saab95Test {
         assertFalse(saabTest.isTurboOn());
     }
 
+    @Test
+    void isTurboOn() {
+        assertFalse(saabTest.isTurboOn());
+        saabTest.setTurboOn();
+        assertTrue(saabTest.isTurboOn());
+    }
 
 }

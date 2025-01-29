@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -6,27 +7,54 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Volvo240Test {
 
-    Saab95 saabTest = new Saab95();
-    Volvo240 volvoTest = new Volvo240();
+    private Saab95 saabTest;
+    private Volvo240 volvoTest;
+
+
+
+    // "Återställer" objekten inför varje test, gör testerna oberoende av varandra
+    @BeforeEach
+    void Setup() {
+        saabTest = new Saab95();
+        volvoTest = new Volvo240();
+    }
+
+
 
     @org.junit.jupiter.api.Test
     void speedFactor() {
+
+        saabTest.setTurboOn();
+        assertEquals(1.625, saabTest.speedFactor());
+        saabTest.setTurboOff();
+        assertEquals(1.25, saabTest.speedFactor());
+
+        assertEquals(1.25, volvoTest.speedFactor());
     }
 
     @org.junit.jupiter.api.Test
     void incrementSpeed() {
+        assertEquals(0, saabTest.getCurrentSpeed());
+        assertEquals(0, volvoTest.getCurrentSpeed());
     }
 
     @org.junit.jupiter.api.Test
     void decrementSpeed() {
+        assertEquals(0, saabTest.getCurrentSpeed());
+        assertEquals(0, volvoTest.getCurrentSpeed());
     }
 
     @Test
     void getX() {
+
+        assertEquals(saabTest.getX(), 0);
+        assertEquals(volvoTest.getX(), 0);
     }
 
     @Test
     void getY() {
+        assertEquals(saabTest.getY(), 0);
+        assertEquals(volvoTest.getY(), 0);
     }
 
     @Test
@@ -77,21 +105,33 @@ class Volvo240Test {
         assertEquals(volvoTest.getCurrentSpeed(), 0.1);
     }
 
-    /*
+/*
+
+Är private, men kan testas indirekt via gas och brake, eller kanske increment/decrementSpeed
+
     @Test
     void setCurrentSpeed() {
-        saabTest.setCurrentSpeed(125);
-        volvoTest.setCurrentSpeed(100);
-    }
 
-     */
+    }
+*/
+
 
     @Test
     void move() {
+        volvoTest.startEngine();
+        volvoTest.move();
+        assertEquals(volvoTest.getX(), 0.1);
+
+        saabTest.startEngine();
+        saabTest.move();
+        assertEquals(saabTest.getX(), 0.1);
+
     }
 
     @Test
     void turnLeft() {
+
+
     }
 
     @Test

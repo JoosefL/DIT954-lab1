@@ -40,6 +40,14 @@ public abstract class Car implements Movable {
         return y;
     }
 
+    public double getDx() {
+        return this.dx;
+    }
+
+    public double getDy() {
+        return this.dy;
+    }
+
 
     public String getModelName() { return MODEL_NAME; }
 

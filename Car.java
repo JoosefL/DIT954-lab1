@@ -1,26 +1,34 @@
 import java.awt.*;
 
 public abstract class Car implements Movable {
+    // Static final (Konstanter för hela klassen)
+    private static final String GAS_BREAK_AMOUNT_ERROR = "MethodInput must be between 0 or 1";
+    private static final String SPEED_DECREASE_ERROR = "Speed decreases after calling gas()";
+    private static final String SPEED_INCREASE_ERROR = "Speed increases after calling break()";
 
+    // Final instansvariabler (Konstanter för varje objekt)
+    private final int NR_DOORS; // Number of doors on the car
+    private final double ENGINE_POWER; // Engine power of the car
+    private final String MODEL_NAME; // The car model name
+
+    // Vanliga instansvariabler
     private double x, y; // koordinater för bilen
     private double dx, dy; // riktningskoordinater (cosinus, sinus)
-
-
-    private final int nrDoors; // Number of doors on the car
-    private final double enginePower; // Engine power of the car
     private double currentSpeed; // The current speed of the car
     private Color color; // Color of the car
-    private final String modelName; // The car model name
+
 
     public Car(int nrDoors, double enginePower, Color color, String modelName) {
-        this.nrDoors = nrDoors;
-        this.enginePower = enginePower;
+        this.NR_DOORS = nrDoors;
+        this.ENGINE_POWER = enginePower;
         this.color = color;
-        this.modelName = modelName;
+        this.MODEL_NAME = modelName;
+
         this.x = 0;
         this.y = 0;
         this.dx = 1;
         this.dy = 0;
+
         stopEngine();
     }
 
@@ -33,18 +41,10 @@ public abstract class Car implements Movable {
     }
 
 
-    public String getModelName() { return modelName; }
+    public String getModelName() { return MODEL_NAME; }
 
     public int getNrDoors(){
-        return nrDoors;
-    }
-
-    public double getEnginePower(){
-        return enginePower;
-    }
-
-    public double getCurrentSpeed(){
-        return currentSpeed;
+        return NR_DOORS;
     }
 
     public Color getColor(){
@@ -59,15 +59,38 @@ public abstract class Car implements Movable {
         currentSpeed = 0.1;
     }
 
-    public void setCurrentSpeed(double currentSpeed) { this.currentSpeed = currentSpeed; }
+    public double getEnginePower(){
+        return ENGINE_POWER;
+    }
 
+    public double getCurrentSpeed(){
+        return currentSpeed;
+    }
+
+    private void setCurrentSpeed(double currentSpeed) {
+        if(currentSpeed < 0) {
+            this.currentSpeed = 0;
+        }
+        else if(currentSpeed > getEnginePower()) {
+            this.currentSpeed = getEnginePower();
+        }
+        else {
+            this.currentSpeed = currentSpeed;
+        }
+    }
+
+    private void incrementSpeed(double amount) {
+        setCurrentSpeed(Math.min(getCurrentSpeed() + speedFactor() * amount, getEnginePower()));
+    }
+
+    private void decrementSpeed(double amount) {
+        setCurrentSpeed(Math.max(getCurrentSpeed() - speedFactor() * amount, 0));
+    }
 
 
     public abstract double speedFactor();
 
-    public abstract void incrementSpeed(double amount);
 
-    public abstract void decrementSpeed(double amount);
 
 
     @Override
@@ -90,16 +113,31 @@ public abstract class Car implements Movable {
         dy = -temp;
     }
 
-    // TODO fix this method according to lab pm
+
     public void gas(double amount){
+        if(amount < 0 || amount > 1) {
+            throw new IllegalArgumentException(GAS_BREAK_AMOUNT_ERROR);
+        }
+        double speedBeforeGas = getCurrentSpeed();
         incrementSpeed(amount);
+
+        if(speedBeforeGas > getCurrentSpeed()) {
+            throw new IllegalArgumentException(SPEED_DECREASE_ERROR);
+        }
     }
 
-    // TODO fix this method according to lab pm
-    public void brake(double amount){
+
+    public void brake(double amount) {
+        if (amount < 0 || amount > 1) {
+            throw new IllegalArgumentException(GAS_BREAK_AMOUNT_ERROR);
+        }
+        double speedBeforeBreak = getCurrentSpeed();
         decrementSpeed(amount);
-    }
 
+        if(speedBeforeBreak > getCurrentSpeed()) {
+            throw new IllegalArgumentException(SPEED_INCREASE_ERROR);
+        }
+    }
 
 
 
